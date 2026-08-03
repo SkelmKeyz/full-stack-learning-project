@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend</title>
+</head>
+<body>
+    <h1>Hello World</h1>
+    <button>Get Message</button>
+
+    <script>
+    const heading = document.querySelector('h1')
+    const button = document.querySelector('button')
+
+    button.addEventListener('click', () => {
+        fetch('http://localhost:3001/message')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status} ${response.statusText}`)
+            }
+            return response.json()
+        })
+        .then(data => {
+            heading.textContent = data.message
+        })
+        .catch(err => {
+            console.error('Error fetching message:', err)
+        })
+    })
+</script>
+
+<form id="contact-form">
+    <input id="name" placeholder="name">
+    <textarea id="message" placeholder="message"></textarea>
+    <button>Submit</button>
+</form>
+
+<script>
+    const form = document.getElementById('contact-form')
+    const nameInput = document.getElementById('name')
+    const messageTextarea = document.getElementById('message')
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+    
+
+    const name = nameInput.value
+    const message = messageTextarea.value;
+
+    fetch('http://localhost:3001/message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Response from server', data)
+    })
+});
+</script>
+
+<form id="form_btn">
+    <button className='databtn'>Data Map</button>
+</form>
+
+<div id="output">DataCenter</div>
+
+<script>
+    const formBtn = document.getElementById('form_btn');
+    const outputDiv = document.getElementById('output');
+
+    formBtn.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        fetch('./data/mockdata.json')
+            .then(response => response.json())
+            .then(result => {
+                
+                outputDiv.textContent = JSON.stringify(result, '', 2);
+
+                
+                outputDiv.innerHTML = result.map(item => `
+                    <p>${item.id}. ${item.first_name} -R${item.last_name} -${item.email} </p>
+                `).join('');
+            })
+            .catch(err => {
+                console.error('Error fetching mock data:', err);
+                outputDiv.innerHTML = 'Error loading data';
+            });
+    });
+</script>
+
+
+
+    
+</body>
+</html>
