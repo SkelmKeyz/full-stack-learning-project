@@ -39,21 +39,26 @@ app.get('/redirect', (req, res) => {
 
 //route chaining
 //Get
-
-app.route('/class', (req, res) => {
+app
+   .route('/class', (req, res) => {
     res.send('http://www.google.com');
-})
-
-   .put((req, res) => {
-    res.send('This is a PUT resquest at /edit');
-})
-
-   .delete((req, res) => {
-    res.send('This is a DELETE request at /delete')
 })
    .get((req, res) => {
     res.send(data);
+    throw new error();
 })
+   .put((req, res) => {
+    res.send('This is a PUT resquest at /edit');
+})
+   .delete((req, res) => {
+    res.send('This is a DELETE request at /delete')
+})
+   
+
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).send("Something is out of order!")
+});
 
 //Get
 app.get('/', (req, res) => {
@@ -113,6 +118,8 @@ app.post('/message', (req, res) => {
     console.log('New message: ', name, message)
     res.json({ message: 'Thank you for your cooporation'})
 })
+
+
 
 
 
